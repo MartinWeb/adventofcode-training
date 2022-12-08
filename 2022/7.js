@@ -1,41 +1,57 @@
 const getFileSystem = (input) => {
     const commands = input.split('\n');
     const directories = [];
-    let currentDirectory = {};
+    let currentDirectory = {
+        name: '/',
+        size: 0,
+        subDirectories : [],
+        index: 0,
+        parent: ''
+    };
     let directoryIndex = 0;
+    let parent = '/';
+
+  directories.push(currentDirectory);
+    commands.shift();
 
     commands.forEach(command => {
         if(command.startsWith("$ cd")) {
             if(command === "$ cd ..") {
+                const directory = directories.find(d => d.name === parent);
+                parent = directory.parent;
+              
                 directoryIndex--;
             } else {  
-                if(Object.keys(currentDirectory).length !== 0) {
-                    directories.push(currentDirectory);
-                }
 
                 directoryIndex++;
 
+                const directoryName = command.split("$ cd ")[1];
+                const newParent = parent + directoryName + '/';
+
                 currentDirectory = {
-                    name: command.split("$ cd ")[1],
+                    name: newParent,
                     size: 0,
                     subDirectories : [],
-                    index: directoryIndex
+                    index: directoryIndex,
+                    parent
                 }
+
+                parent = newParent;
+              
+                directories.push(currentDirectory);
             }
         }
 
         if(!command.startsWith("$")) {
             if(command.startsWith("dir")) {
                 const subDirectoyName = command.split("dir ")[1];
-                currentDirectory.subDirectories.push(subDirectoyName);
+                currentDirectory.subDirectories.push(parent + subDirectoyName + '/');
             } else {
                 const fileSize = Number(command.split(" ")[0]);
                 currentDirectory.size += fileSize;
             }
         }
     });
-
-    directories.push(currentDirectory);
 
     const maxDirectoryIndex = Math.max(...directories.map(d => d.index));
 
@@ -47,7 +63,7 @@ const getFileSystem = (input) => {
 
             if(subDirectories.length > 0) {
                 subDirectories.forEach(subDirectoryName => {
-                    const subDirectory = directories.find(d => d.name === subDirectoryName && d.index === directory.index + 1);
+                    const subDirectory = directories.find(d => d.name === subDirectoryName);
                     directory.size += subDirectory?.size;
                 });
             }
