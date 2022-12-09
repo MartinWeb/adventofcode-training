@@ -10,3 +10,4 @@
 | Jour 6        |  https://adventofcode.com/2022/day/6  |             ✔️  ✔️ |  
 | Jour 7        |  https://adventofcode.com/2022/day/7  |             ✔️  ✔️ |   
 | Jour 8        |  https://adventofcode.com/2022/day/8  |             ✔️  ✔️ | 
+| Jour 9        |  https://adventofcode.com/2022/day/9  |             ✔️  ✔️ | 
